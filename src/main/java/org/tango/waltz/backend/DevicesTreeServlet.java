@@ -40,6 +40,11 @@ public class DevicesTreeServlet extends HttpServlet{
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String[] tango_hosts = req.getParameterValues("v");
+        if(tango_hosts == null || tango_hosts.length == 0) {
+            resp.setStatus(400);
+            resp.setContentLength(0);
+            return;
+        }
 
         Iterator<String> it = Arrays.asList(tango_hosts).iterator();
 
@@ -110,6 +115,7 @@ public class DevicesTreeServlet extends HttpServlet{
 
     private static class TangoAliases {
         public final String value = "aliases";
+        public String $css = "alias";
         public Object[] data;
 
         public TangoAliases(Object[] data) {
@@ -169,6 +175,7 @@ public class DevicesTreeServlet extends HttpServlet{
 
     private static class TangoHost {
         public String id;
+        public String $css = "tango_host";
         public String value;
         public Object[] data;
 
@@ -180,6 +187,7 @@ public class DevicesTreeServlet extends HttpServlet{
 
     private static class TangoAlias{
         public String value;
+        public String $css = "member";
         public boolean isAlias;
         public String device_id;
 
@@ -192,6 +200,7 @@ public class DevicesTreeServlet extends HttpServlet{
 
     private static class TangoMember{
         public String value;
+        public String $css = "member";
         public boolean isMember;
         public String device_name;
         public String device_id;
