@@ -1,0 +1,16 @@
+language: java
+sudo: false
+script:
+  - mvn package -Ptravis
+deploy:
+  - provider: releases
+    api_key: $GITHUB_OAUTH_TOKEN
+    file: "target/devices-tree.war"
+    skip_cleanup: true
+    on:
+      tags: true
+jdk:
+  - openjdk8
+cache:
+  directories:
+    - '$HOME/.m2/repository'
