@@ -3,12 +3,12 @@
   <component name="FacetManager">
     <facet type="web" name="Web">
       <configuration>
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/webapp/WEB-INF/web.xml" />
+        </descriptors>
         <webroots>
           <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
         </webroots>
-        <sourceRoots>
-          <root url="file://$MODULE_DIR$/src/main/java" />
-        </sourceRoots>
       </configuration>
     </facet>
   </component>
@@ -26,9 +26,9 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.mockito:mockito-all:1.9.0" level="project" />
     <orderEntry type="library" name="Maven: javax.servlet:javax.servlet-api:3.1.0" level="project" />
-    <orderEntry type="library" name="Maven: org.tango-controls:JTangoClientLang:9.3.10" level="project" />
+    <orderEntry type="library" name="Maven: org.tango-controls:JTangoClientLang:9.5.6" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.4" level="project" />
-    <orderEntry type="library" name="Maven: org.tango-controls:TangORB:9.3.10" level="project" />
+    <orderEntry type="library" name="Maven: org.tango-controls:TangORB:9.5.6" level="project" />
     <orderEntry type="library" name="Maven: org.jacorb:jacorb:3.8" level="project" />
     <orderEntry type="library" name="Maven: org.jacorb:jacorb-omgapi:3.8" level="project" />
     <orderEntry type="library" name="Maven: org.jacorb:jacorb-services:3.8" level="project" />
@@ -46,8 +46,8 @@
     <orderEntry type="library" name="Maven: picocontainer:picocontainer:1.2" level="project" />
     <orderEntry type="library" name="Maven: tanukisoft:wrapper:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.zeromq:jeromq:0.3.4" level="project" />
-    <orderEntry type="library" name="Maven: org.tango-controls:JTangoCommons:9.3.10" level="project" />
-    <orderEntry type="library" name="Maven: org.tango-controls:JavaTangoIDL:9.3.10" level="project" />
+    <orderEntry type="library" name="Maven: org.tango-controls:JTangoCommons:9.5.6" level="project" />
+    <orderEntry type="library" name="Maven: org.tango-controls:JavaTangoIDL:9.5.6" level="project" />
     <orderEntry type="library" name="Maven: org.jacorb:jacorb-idl-compiler:3.8" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant:1.8.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.ant:ant-launcher:1.8.2" level="project" />
@@ -65,5 +65,6 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.2.3" level="project" />
     <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.2.3" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.0" level="project" />
   </component>
 </module>

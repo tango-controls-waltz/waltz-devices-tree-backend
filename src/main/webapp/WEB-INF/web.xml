@@ -12,6 +12,6 @@
 
     <servlet-mapping>
         <servlet-name>DevicesTree</servlet-name>
-        <url-pattern>/devices-tree</url-pattern>
+        <url-pattern>/get</url-pattern>
     </servlet-mapping>
 </web-app>
