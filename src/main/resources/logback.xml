@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <jmxConfigurator/>
+
+    <property name="layoutPattern" value="%p %d [%t - %X{deviceName} - %C{1}] %logger{36}.%M:%L - %m%n"/>
+    <property name="logHome" value="/tmp/logs/tomcat8/webapps"/>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logHome}/devices-tree.log</file>
+        <Append>true</Append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <fileNamePattern>${logHome}/devices-tree.log.%i</fileNamePattern>
+            <minIndex>1</minIndex>
+            <maxIndex>3</maxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${layoutPattern}</pattern>
+            </layout>
+        </encoder>
+    </appender>
+
+    <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
+        <appender-ref ref="FILE"/>
+    </appender>
+
+    <logger name="org.apache" level="ERROR"/>
+    <logger name="org.jacorb" level="ERROR"/>
+    <logger name="org.tango" level="ERROR"/>
+    <logger name="org.tango.rest" level="ERROR"/>
+    <logger name="org.tango.web" level="ERROR"/>
+    <logger name="org.quartz" level="ERROR"/>
+    <logger name="net.sf.ehcache" level="ERROR"/>
+
+    <root level="INFO">
+        <appender-ref ref="ASYNC"/>
+    </root>
+</configuration>
