@@ -1,15 +1,11 @@
 package org.tango.waltz.backend;
 
-import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.esrf.Tango.DevFailed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tango.TangoHostManager;
-import org.tango.client.database.Database;
 import org.tango.client.database.DatabaseFactory;
-import org.tango.client.database.ITangoDB;
 import org.tango.utils.DevFailedUtils;
 
 import javax.servlet.ServletException;
@@ -18,13 +14,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -46,7 +40,8 @@ public class DevicesTreeServlet extends HttpServlet{
             return;
         }
 
-        Iterator<String> it = Arrays.asList(tango_hosts).iterator();
+        Iterator<String> it =
+                new LinkedList<>(Arrays.asList(tango_hosts)).iterator();
 
         Collection result = new ArrayList();
         for(;it.hasNext();){
@@ -105,7 +100,7 @@ public class DevicesTreeServlet extends HttpServlet{
                         map((String alias) ->
                         {
                             try {
-                                return new TangoAlias(alias, true, host + "/" + db.get_device_from_alias(alias));
+                                return new TangoAlias(alias, db.get_device_from_alias(alias));
                             } catch (DevFailed devFailed) {
                                 return null;
                             }
@@ -143,7 +138,7 @@ public class DevicesTreeServlet extends HttpServlet{
                         try {
                             String[] device_member = db.get_device_member(domain + "/" + family + "/*");
                             return new TangoDomain(family, Arrays.stream(device_member)
-                                    .map(member -> new TangoMember(member, true, domain + "/" + family + "/" + member, host + "/" + domain + "/" + family + "/" + member)).toArray());
+                                    .map(member -> new TangoMember(member, domain + "/" + family + "/" + member, host + "/" + domain + "/" + family + "/" + member)).toArray());
 
                         } catch (DevFailed devFailed) {
                             logger.warn("Failed to get member list for {} due to {}", host, DevFailedUtils.toString(devFailed));
@@ -188,26 +183,24 @@ public class DevicesTreeServlet extends HttpServlet{
     private static class TangoAlias{
         public String value;
         public String $css = "member";
-        public boolean isAlias;
-        public String device_id;
+        public boolean isAlias = true;
+        public String device_name;
 
-        public TangoAlias(String value, boolean isAlias, String device_id) {
+        public TangoAlias(String value, String device_name) {
             this.value = value;
-            this.isAlias = isAlias;
-            this.device_id = device_id;
+            this.device_name = device_name;
         }
     }
 
     private static class TangoMember{
         public String value;
         public String $css = "member";
-        public boolean isMember;
+        public boolean isMember = true;
         public String device_name;
         public String device_id;
 
-        public TangoMember(String value, boolean isMember, String device_name, String device_id) {
+        public TangoMember(String value, String device_name, String device_id) {
             this.value = value;
-            this.isMember = isMember;
             this.device_name = device_name;
             this.device_id = device_id;
         }
