@@ -3,6 +3,7 @@ package org.tango.waltz.backend;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import fr.esrf.Tango.DevFailed;
+import fr.esrf.TangoApi.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tango.client.database.DatabaseFactory;
@@ -40,6 +41,9 @@ public class DevicesTreeServlet extends HttpServlet{
             return;
         }
 
+        String[] filters = req.getParameterValues("f");
+        DevicesFilter filter = new DevicesFilter(filters);
+
         Iterator<String> it =
                 new LinkedList<>(Arrays.asList(tango_hosts)).iterator();
 
@@ -66,7 +70,7 @@ public class DevicesTreeServlet extends HttpServlet{
                 continue;
             }
 
-            TangoHost tangoHost = processTangoHost(next, db);
+            TangoHost tangoHost = processTangoHost(next, db, filter);
             tree.putIfAbsent(next, tangoHost);
             result.add(tangoHost);
 
@@ -80,7 +84,7 @@ public class DevicesTreeServlet extends HttpServlet{
         gson.toJson(result, resp.getWriter());
     }
 
-    private TangoHost processTangoHost(String host, fr.esrf.TangoApi.Database db) {
+    private TangoHost processTangoHost(String host, Database db, DevicesFilter filter) {
         TangoHost result = new TangoHost(host, host);
         Collection data = new ArrayList();
         try {
@@ -88,7 +92,7 @@ public class DevicesTreeServlet extends HttpServlet{
         } catch (DevFailed devFailed) {
             logger.warn("Failed to get aliases list for {} due to {}",host, DevFailedUtils.toString(devFailed));
         }
-        data.addAll(processDomains(host, db));
+        data.addAll(processDomains(host, db, filter));
         result.data = data.toArray();
         return result;
     }
@@ -128,35 +132,17 @@ public class DevicesTreeServlet extends HttpServlet{
         }
     }
 
-    private Collection<Object> processDomains(String host, fr.esrf.TangoApi.Database db) {
-        try {
-            final String[] domains = db.get_device_domain("*");
-            return Arrays.stream(domains).map((domain) -> {
-                try {
-                    String[] device_family = db.get_device_family(domain + "/*");
-                    return new TangoDomain(domain, Arrays.stream(device_family).map((family) -> {
-                        try {
-                            String[] device_member = db.get_device_member(domain + "/" + family + "/*");
-                            return new TangoDomain(family, Arrays.stream(device_member)
+    private Collection<Object> processDomains(String host, Database db, DevicesFilter filter) {
+            final List<String> domains = filter.getDomains(host, db);
+            return domains.stream().map((domain) -> {
+                    List<String> device_family = filter.getFamilies(host,db, domain);
+                    return new TangoDomain(domain, device_family.stream().map((family) -> {
+                            List<String> device_member = filter.getMembers(host, db, domain, family);
+                            return new TangoDomain(family, device_member.stream()
                                     .map(member -> new TangoMember(member, domain + "/" + family + "/" + member, host + "/" + domain + "/" + family + "/" + member)).toArray());
 
-                        } catch (DevFailed devFailed) {
-                            logger.warn("Failed to get member list for {} due to {}", host, DevFailedUtils.toString(devFailed));
-                            return null;
-                        }
-                    }).filter(Objects::nonNull).toArray());
-
-                } catch (DevFailed devFailed) {
-                    logger.warn("Failed to get family list for {} due to {}",host, DevFailedUtils.toString(devFailed));
-                    return null;
-                }
-
-            }).filter(Objects::nonNull).collect(Collectors.toList());
-        } catch (DevFailed devFailed) {
-            logger.warn("Failed to get domain list for {} due to {}",host, DevFailedUtils.toString(devFailed));
-            return Collections.emptyList();
-        }
-
+                    }).toArray());
+            }).collect(Collectors.toList());
     }
 
     private URI checkURISyntax(String next) throws URISyntaxException{
