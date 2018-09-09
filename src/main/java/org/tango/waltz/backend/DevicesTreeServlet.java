@@ -88,7 +88,7 @@ public class DevicesTreeServlet extends HttpServlet{
         TangoHost result = new TangoHost(host, host);
         Collection data = new ArrayList();
         try {
-            data.add(processAliases(host, db));
+            data.add(processAliases(host, db, filter));
         } catch (DevFailed devFailed) {
             logger.warn("Failed to get aliases list for {} due to {}",host, DevFailedUtils.toString(devFailed));
         }
@@ -97,7 +97,7 @@ public class DevicesTreeServlet extends HttpServlet{
         return result;
     }
 
-    private Object processAliases(String host, fr.esrf.TangoApi.Database db) throws DevFailed {
+    private Object processAliases(String host, Database db, DeviceFilters filter) throws DevFailed {
         final String[] aliases = db.get_device_alias_list("*");
         return new TangoAliases(
                 Arrays.stream(aliases).
@@ -109,7 +109,9 @@ public class DevicesTreeServlet extends HttpServlet{
                                 return null;
                             }
                         }).
-                        filter(Objects::nonNull).toArray());
+                        filter(Objects::nonNull)
+                        .filter(filter::checkDevice)
+                        .toArray());
     }
 
     private static class TangoAliases {
@@ -166,7 +168,7 @@ public class DevicesTreeServlet extends HttpServlet{
         }
     }
 
-    private static class TangoAlias{
+    static class TangoAlias{
         public String value;
         public String $css = "member";
         public boolean isAlias = true;

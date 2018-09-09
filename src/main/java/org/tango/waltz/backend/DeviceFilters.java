@@ -76,6 +76,11 @@ public class DeviceFilters {
                 }).flatMap(Arrays::stream).collect(Collectors.toList());
     }
 
+    public boolean checkDevice(DevicesTreeServlet.TangoAlias alias) {
+        DeviceFilter deviceFilter = DeviceFilter.valueOf(alias.device_name);
+        return filters.contains(deviceFilter);
+    }
+
     private static class DeviceFilter {
         public String domain;
         public String family;
@@ -97,9 +102,9 @@ public class DeviceFilters {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             DeviceFilter that = (DeviceFilter) o;
-            return Objects.equals(domain, that.domain) &&
-                    Objects.equals(family, that.family) &&
-                    Objects.equals(member, that.member);
+            return (Objects.equals(domain, "*") || Objects.equals(that.domain, "*") ||  Objects.equals(domain, that.domain)) &&
+                    (Objects.equals(family, "*") || Objects.equals(that.family, "*") || Objects.equals(family, that.family)) &&
+                    (Objects.equals(member, "*") || Objects.equals(that.member, "*") || Objects.equals(member, that.member));
         }
 
         @Override
