@@ -42,7 +42,9 @@ public class DeviceFilters {
                 logger.warn("Failed to get domain list for {} due to {}", host, DevFailedUtils.toString(devFailed));
                 return null;
             }
-        }).flatMap(Arrays::stream).collect(Collectors.toList());
+        }).flatMap(Arrays::stream)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public List<String> getFamilies(String host, Database db, String domain) {
@@ -57,7 +59,9 @@ public class DeviceFilters {
                         logger.warn("Failed to get family list for {} due to {}", host, DevFailedUtils.toString(devFailed));
                         return null;
                     }
-                }).flatMap(Arrays::stream).collect(Collectors.toList());
+                }).flatMap(Arrays::stream)
+                .distinct()
+                .collect(Collectors.toList());
     }
 
     public List<String> getMembers(String host, Database db, String domain, String family) {
