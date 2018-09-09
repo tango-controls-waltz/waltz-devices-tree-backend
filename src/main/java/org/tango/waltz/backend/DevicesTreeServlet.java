@@ -42,7 +42,7 @@ public class DevicesTreeServlet extends HttpServlet{
         }
 
         String[] filters = req.getParameterValues("f");
-        DevicesFilter filter = new DevicesFilter(filters);
+        DeviceFilters filter = new DeviceFilters(filters);
 
         Iterator<String> it =
                 new LinkedList<>(Arrays.asList(tango_hosts)).iterator();
@@ -84,7 +84,7 @@ public class DevicesTreeServlet extends HttpServlet{
         gson.toJson(result, resp.getWriter());
     }
 
-    private TangoHost processTangoHost(String host, Database db, DevicesFilter filter) {
+    private TangoHost processTangoHost(String host, Database db, DeviceFilters filter) {
         TangoHost result = new TangoHost(host, host);
         Collection data = new ArrayList();
         try {
@@ -132,7 +132,7 @@ public class DevicesTreeServlet extends HttpServlet{
         }
     }
 
-    private Collection<Object> processDomains(String host, Database db, DevicesFilter filter) {
+    private Collection<Object> processDomains(String host, Database db, DeviceFilters filter) {
             final List<String> domains = filter.getDomains(host, db);
             return domains.stream().map((domain) -> {
                     List<String> device_family = filter.getFamilies(host,db, domain);
