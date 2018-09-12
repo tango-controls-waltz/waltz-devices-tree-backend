@@ -4,7 +4,7 @@
 
     <groupId>org.tango-controls.waltz</groupId>
     <artifactId>devices-tree</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.2</version>
     <packaging>war</packaging>
 
     <developers>
@@ -19,7 +19,7 @@
         <connection>scm:git:git@github.com:tango-controls-waltz/waltz-${project.artifactId}-backend</connection>
         <developerConnection>scm:git:git@github.com:tango-controls-waltz/waltz-${project.artifactId}-backend</developerConnection>
         <url>https://github.com/tango-controls-waltz/waltz-${project.artifactId}-backend</url>
-      <tag>HEAD</tag>
+      <tag>0.2</tag>
   </scm>
 
     <dependencies>
