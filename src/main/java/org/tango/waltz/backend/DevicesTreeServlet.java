@@ -116,7 +116,7 @@ public class DevicesTreeServlet extends HttpServlet{
 
     private static class TangoAliases {
         public final String value = "aliases";
-        public String $css = "alias";
+        public String $css = "aliases";
         public Object[] data;
 
         public TangoAliases(Object[] data) {
